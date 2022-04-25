@@ -553,7 +553,7 @@ end)
 
 RegisterNetEvent('apartments:client:setupSpawnUI', function(cData)
     QBCore.Functions.TriggerCallback('apartments:GetOwnedApartment', function(result)
-        if not result then
+        if result then
             TriggerEvent('qb-spawn:client:spawnPlayer')
             TriggerEvent('qb-spawn:client:setCam')
         else
