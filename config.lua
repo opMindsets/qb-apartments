@@ -1,6 +1,7 @@
 Apartments = {}
 Apartments.Starting = true
 Apartments.SpawnOffset = 30
+Apartments.UseTarget = GetConvar('UseTarget', 'false') == 'true'
 Apartments.Locations = {
     ["apartment1"] = {
         name = "apartment1",
