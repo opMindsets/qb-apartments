@@ -210,6 +210,7 @@ local function RegisterApartmentEntranceTarget(apartmentID, apartmentData)
                 type = "client",
                 event = "apartments:client:EnterApartment",
                 label = Lang:t("text.enter"),
+                icon = "fas fa-arrow-right"
             },
         }
     end
@@ -217,6 +218,7 @@ local function RegisterApartmentEntranceTarget(apartmentID, apartmentData)
         type = "client",
         event = "apartments:client:DoorbellMenu",
         label = Lang:t('text.ring_doorbell'),
+        icon = "fas fa-bell"
     }
 
     exports['qb-target']:AddBoxZone(boxName, coords, boxData.length, boxData.width, {
