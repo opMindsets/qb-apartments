@@ -16,7 +16,6 @@ local InApartmentTargets = {}
 -- polyzone variables
 local IsInsideStashZone = false
 local IsInsideOutfitsZone = false
-local IsInsideLogoutZone = false
 
 
 -- polyzone integration
@@ -156,10 +155,6 @@ local function RegisterInApartmentZone(targetKey, coords, heading, text)
             IsInsideOutfitsZone = isPointInside
         end
 
-        if targetKey == "logoutPos" then
-            IsInsideLogoutZone = isPointInside
-        end
-
     end)
 
     InApartmentTargets[targetKey] = InApartmentTargets[targetKey] or {}
@@ -210,7 +205,7 @@ local function RegisterApartmentEntranceTarget(apartmentID, apartmentData)
                 type = "client",
                 event = "apartments:client:EnterApartment",
                 label = Lang:t("text.enter"),
-                icon = "fas fa-arrow-right"
+                icon = "fas fa-door-closed"
             },
         }
     end
@@ -218,7 +213,7 @@ local function RegisterApartmentEntranceTarget(apartmentID, apartmentData)
         type = "client",
         event = "apartments:client:DoorbellMenu",
         label = Lang:t('text.ring_doorbell'),
-        icon = "fas fa-bell"
+        icon = "fas fa-bells"
     }
 
     exports['qb-target']:AddBoxZone(boxName, coords, boxData.length, boxData.width, {
@@ -261,7 +256,6 @@ local function SetInApartmentTargets()
     local entrancePos = vector3(Apartments.Locations[ClosestHouse].coords.enter.x - POIOffsets.exit.x, Apartments.Locations[ClosestHouse].coords.enter.y - POIOffsets.exit.y - 0.5, Apartments.Locations[ClosestHouse].coords.enter.z - CurrentOffset + POIOffsets.exit.z)
     local stashPos = vector3(Apartments.Locations[ClosestHouse].coords.enter.x - POIOffsets.stash.x, Apartments.Locations[ClosestHouse].coords.enter.y - POIOffsets.stash.y, Apartments.Locations[ClosestHouse].coords.enter.z - CurrentOffset + POIOffsets.stash.z)
     local outfitsPos = vector3(Apartments.Locations[ClosestHouse].coords.enter.x - POIOffsets.clothes.x, Apartments.Locations[ClosestHouse].coords.enter.y - POIOffsets.clothes.y, Apartments.Locations[ClosestHouse].coords.enter.z - CurrentOffset + POIOffsets.clothes.z)
-    local logoutPos = vector3(Apartments.Locations[ClosestHouse].coords.enter.x - POIOffsets.logout.x, Apartments.Locations[ClosestHouse].coords.enter.y + POIOffsets.logout.y, Apartments.Locations[ClosestHouse].coords.enter.z - CurrentOffset + POIOffsets.logout.z)
 
     if Apartments.UseTarget then
         RegisterInApartmentTarget('entrancePos', entrancePos, 0, {
@@ -283,7 +277,7 @@ local function SetInApartmentTargets()
                 type = "client",
                 event = "apartments:client:OpenStash",
                 label = Lang:t('text.open_stash'),
-                icon = "fas fa-box"
+                icon = "fas fa-bell-on"
             },
         })
         RegisterInApartmentTarget('outfitsPos', outfitsPos, 0, {
@@ -291,22 +285,13 @@ local function SetInApartmentTargets()
                 type = "client",
                 event = "apartments:client:ChangeOutfit",
                 label = Lang:t('text.change_outfit'),
-                icon = "fas fa-shirt"
-            },
-        })
-        RegisterInApartmentTarget('logoutPos', logoutPos, 0, {
-            {
-                type = "client",
-                event = "apartments:client:Logout",
-                label = Lang:t('text.logout'),
-                icon = "fas fa-sign-out"
+                icon = "fas fa-clothes-hanger"
             },
         })
     else
         RegisterInApartmentZone('entrancePos', entrancePos, 0, Lang:t('text.options'))
         RegisterInApartmentZone('stashPos', stashPos, 0, "[E] " .. Lang:t('text.open_stash'))
         RegisterInApartmentZone('outfitsPos', outfitsPos, 0, "[E] " .. Lang:t('text.change_outfit'))
-        RegisterInApartmentZone('logoutPos', logoutPos, 0, "[E] " .. Lang:t('text.logout'))
     end
 end
 
@@ -329,7 +314,6 @@ end
 local function DeleteInApartmentTargets()
     IsInsideStashZone = false
     IsInsideOutfitsZone = false
-    IsInsideLogoutZone = false
 
     if InApartmentTargets and next(InApartmentTargets) then
         for id, apartmentTarget in pairs(InApartmentTargets) do
@@ -705,13 +689,6 @@ CreateThread(function ()
                 if IsInsideOutfitsZone then
                     if IsControlJustPressed(0, 38) then
                         TriggerEvent('apartments:client:ChangeOutfit')
-                        exports['qb-core']:HideText()
-                    end
-                end
-
-                if IsInsideLogoutZone then
-                    if IsControlJustPressed(0, 38) then
-                        TriggerEvent('apartments:client:Logout')
                         exports['qb-core']:HideText()
                     end
                 end
